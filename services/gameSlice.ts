@@ -22,6 +22,8 @@ interface GameState {
 		active: number;
 		wasted: number;
 	};
+	hintShown: boolean;
+	highlightedTile: string;
 }
 
 const initialState: GameState = {
@@ -35,6 +37,8 @@ const initialState: GameState = {
 		active: 0,
 		wasted: 0,
 	},
+	hintShown: false,
+	highlightedTile: '',
 };
 
 const gameSlice = createSlice({
@@ -88,6 +92,18 @@ const gameSlice = createSlice({
 		setTime: (state, action: PayloadAction<number>) => {
 			state.time = action.payload;
 		},
+		showHint: state => {
+			const unflaggedMines = state.board
+				.flat()
+				.filter(tile => tile.mine && tile.status !== TILE_STATUSES.FLAG);
+
+			if (unflaggedMines.length > 0) {
+				const randomMine =
+					unflaggedMines[Math.floor(Math.random() * unflaggedMines.length)];
+				state.hintShown = true;
+				state.highlightedTile = `${randomMine.x}-${randomMine.y}`;
+			}
+		},
 		startGame: state => {
 			state.isStarted = true;
 		},
@@ -97,6 +113,8 @@ const gameSlice = createSlice({
 			state.board = generateBoard(state.boardSize, state.minesCount);
 			state.time = GAME_TIME;
 			state.clicks = { active: 0, wasted: 0 };
+			state.hintShown = false;
+			state.highlightedTile = '';
 		},
 		stopGame: (state, action: PayloadAction<GAME_STATUSES>) => {
 			state.status = action.payload;
@@ -149,6 +167,7 @@ export const {
 	setMinesCount,
 	startGame,
 	setTime,
+	showHint,
 } = gameSlice.actions;
 
 export default gameSlice.reducer;
