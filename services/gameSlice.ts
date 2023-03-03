@@ -53,15 +53,17 @@ const gameSlice = createSlice({
 			state.board[x][y].status = status;
 
 			if (!isAdjacentReveal) {
-				if (
-					mine &&
-					(status === TILE_STATUSES.FLAG || status === TILE_STATUSES.QUESTION)
-				) {
+				if (mine && status === TILE_STATUSES.FLAG) {
 					state.clicks.active += 1;
 					return;
 				}
 
 				if (mine) {
+					state.clicks.wasted += 1;
+					return;
+				}
+
+				if (!mine && status === TILE_STATUSES.FLAG) {
 					state.clicks.wasted += 1;
 					return;
 				}
