@@ -110,7 +110,7 @@ select {
 	border-bottom-color: white;
 	border-left-color: #7b7b7b;
 	border-top-color: #7b7b7b;
-	padding: 5px 5px;
+	padding: 5px;
 	font-size: 14px;
 	cursor: pointer;
 	outline: none;
@@ -118,6 +118,32 @@ select {
 }
 
 select:disabled {
+	cursor: not-allowed;
+}
+
+.hint {
+	background-color: #c2c2c2;
+	color: #333;
+	border: 3px solid;
+	border-right-color: #999;
+	border-bottom-color: #999;
+	border-left-color: white;
+	border-top-color: white;
+	font-size: 14px;
+	outline: none;
+	user-select: none;
+	width: 34px;
+}
+
+.hint:active,
+.hint:disabled {
+	border-right-color: white;
+	border-bottom-color: white;
+	border-left-color: #7b7b7b;
+	border-top-color: #7b7b7b;
+}
+
+.hint:disabled {
 	cursor: not-allowed;
 }
 
@@ -129,6 +155,12 @@ select:disabled {
 
 .tile.hidden {
 	background-image: var(--hidden);
+}
+
+.highlight {
+	/* border: 2px solid red; */
+	outline: 2px solid red;
+	z-index: 10;
 }
 
 .tile.active {

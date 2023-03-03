@@ -13,6 +13,8 @@ interface TileProps {
 }
 
 const Tile = ({ tile }: TileProps) => {
+	const tileId = `${tile.x}-${tile.y}`;
+
 	const board = useSelector((state: RootState) => state.game.board);
 	const gameStatus = useSelector((state: RootState) => state.game.status);
 
@@ -20,15 +22,15 @@ const Tile = ({ tile }: TileProps) => {
 	const minesCount = useSelector((state: RootState) => state.game.minesCount);
 
 	const isStarted = useSelector((state: RootState) => state.game.isStarted);
+
+	const highlightedTile = useSelector(
+		(state: RootState) => state.game.highlightedTile
+	);
+
 	const dispatch = useDispatch();
 
 	const [isLeftMouseDown, setIsLeftMouseDown] = useState(false);
 	const tileRef = useRef<HTMLDivElement>(null);
-
-	const tileClassName = cx('tile', {
-		[tile.status]: !isLeftMouseDown,
-		active: isLeftMouseDown,
-	});
 
 	// handle active tile style and 'oh' smiley
 	const handleMouseDown = (e: React.MouseEvent<HTMLElement>) => {
@@ -88,11 +90,22 @@ const Tile = ({ tile }: TileProps) => {
 			return;
 		}
 
+		if (!isStarted) {
+			dispatch(startGame());
+		}
+
 		dispatch(setTile({ ...tile, status: markTile(tile) }));
 	};
 
+	const tileClassName = cx('tile', {
+		[tile.status]: !isLeftMouseDown,
+		active: isLeftMouseDown,
+		highlight: tileId === highlightedTile,
+	});
+
 	return (
 		<div
+			id={tileId}
 			ref={tileRef}
 			onMouseDown={handleMouseDown}
 			onMouseUp={handleMouseUp}
