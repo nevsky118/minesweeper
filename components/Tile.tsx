@@ -64,17 +64,11 @@ const Tile = ({ tile }: TileProps) => {
 		};
 	}, [isLeftMouseDown]);
 
-	const validateClick = () => {
+	const handleLeftClick = () => {
 		if (gameStatus === GAME_STATUSES.LOSS || gameStatus === GAME_STATUSES.WIN) {
 			return;
 		}
 
-		if (!isStarted) {
-			dispatch(startGame());
-		}
-	};
-
-	const handleLeftClick = () => {
 		if (!isStarted) {
 			const newBoard = generateBoard(boardSize, minesCount, {
 				x: tile.x,
@@ -84,14 +78,16 @@ const Tile = ({ tile }: TileProps) => {
 			dispatch(startGame());
 			revealTile(newBoard[tile.x][tile.y], newBoard, dispatch);
 		} else {
-			validateClick();
 			revealTile(tile, board, dispatch);
 		}
 	};
 
 	const handleRightClick = (e: React.MouseEvent<HTMLElement>) => {
 		e.preventDefault();
-		validateClick();
+		if (gameStatus === GAME_STATUSES.LOSS || gameStatus === GAME_STATUSES.WIN) {
+			return;
+		}
+
 		dispatch(setTile({ ...tile, status: markTile(tile) }));
 	};
 
